@@ -1,12 +1,12 @@
 {
-  "name": "lec-9",
+  "name": "airbnb-clone",
   "version": "1.0.0",
-  "description": "",
+  "description": "Airbnb clone with Node.js, Express, MongoDB, Cloudinary",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "tailwind": "npx tailwindcss -i ./views/input.css -o ./public/output.css --watch",
-    "start": "nodemon app.js & npm run tailwind"
+    "start": "node app.js",
+    "dev": "nodemon app.js",
+    "build:css": "npx tailwindcss -i ./views/input.css -o ./public/output.css"
   },
   "keywords": [],
   "author": "",
