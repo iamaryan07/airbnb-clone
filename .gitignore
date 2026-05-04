@@ -1,0 +1,24 @@
+# node modules
+node_modules/
+
+# env variables (CRITICAL)
+.env
+
+# logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS files
+.DS_Store
+
+# uploads (local images - useless in production)
+uploads/
+rules/
+
+# build output (if any)
+dist/
+build/
+
+# optional
+*.log

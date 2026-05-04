@@ -1,0 +1,168 @@
+<%- include('../partials/head') %>
+
+<body class="bg-gray-50 text-gray-900">
+
+  <%- include('../partials/nav') %>
+
+  <!-- Header -->
+  <section class="max-w-7xl mx-auto px-6 pt-16 pb-8 text-center">
+
+    <span class="inline-block text-xs font-medium tracking-widest uppercase text-rose-600 bg-rose-50 px-4 py-1 rounded-full mb-5">
+      Host dashboard
+    </span>
+
+    <h1 class="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
+      Your Listed Homes
+    </h1>
+
+    <p class="text-gray-500 text-base max-w-xl mx-auto">
+      Manage your properties, update details, or remove listings.
+    </p>
+
+    <a href="/host/add-home"
+      class="inline-block mt-6 text-sm font-medium text-white bg-rose-500 px-6 py-3 rounded-xl hover:bg-rose-600 transition">
+      Add New Property
+    </a>
+
+  </section>
+
+  <!-- Listings -->
+  <section class="max-w-7xl mx-auto px-6 pb-16">
+
+    <!-- Header row -->
+    <div class="flex justify-between items-center mb-10">
+      <h2 class="text-2xl font-semibold">
+        All Listings
+      </h2>
+      <span class="text-sm text-gray-400">
+        <%= registeredHomes.length %> results
+      </span>
+    </div>
+
+    <% if (registeredHomes.length > 0) { %>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+
+        <% registeredHomes.forEach(home => { %>
+
+          <div class="bg-white rounded-2xl overflow-hidden border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition duration-300 flex flex-col">
+
+            <!-- Images -->
+            <div class="relative w-full aspect-[3/2] overflow-hidden" data-images='<%- JSON.stringify(home.url) %>'>
+
+              <img
+                class="slider w-full h-full object-cover"
+                src="<%= home.url[0] %>"
+              />
+
+              <button
+                onclick="prevImage(this)"
+                class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 px-3 py-1 rounded-full"
+              >
+                ◀
+              </button>
+
+              <button
+                onclick="nextImage(this)"
+                class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 px-3 py-1 rounded-full"
+              >
+                ▶
+              </button>
+
+              <span class="absolute top-3 left-3 text-xs font-medium bg-white/90 px-3 py-1 rounded-full">
+                Entire home
+              </span>
+
+            </div>
+
+            <!-- Content -->
+            <div class="p-5 flex flex-col flex-1 gap-3">
+
+              <!-- Title + Rating -->
+              <div class="flex justify-between items-start">
+                <h3 class="text-base font-semibold leading-snug">
+                  <%= home.houseName %>
+                </h3>
+                <span class="text-sm font-medium text-amber-600 whitespace-nowrap">
+                  ★ <%= home.rating || "4.5" %>
+                </span>
+              </div>
+
+              <!-- Location -->
+              <p class="text-sm text-gray-500 flex items-center gap-1">
+                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+                  <circle cx="12" cy="10" r="3"/>
+                </svg>
+                <%= home.location || "Unknown location" %>
+              </p>
+
+              <!-- Price -->
+              <div class="mt-auto pt-3 border-t border-gray-100">
+                <span class="text-lg font-semibold">
+                  $<%= home.price || "120" %>
+                </span>
+                <span class="text-sm text-gray-400"> / night</span>
+              </div>
+
+              <!-- Property Rules -->
+              <% if (home.rules) { %>
+                <div class="mt-2">
+                  <a 
+                    href="/rules/<%= home.rules %>" 
+                    target="_blank"
+                    class="inline-flex items-center gap-1 text-sm text-rose-500 hover:underline"
+                  >
+                    View House Rules
+                  </a>
+                </div>
+              <% } %>
+
+              <!-- Actions -->
+              <div class="flex flex-col gap-2 mt-3">
+
+                <!-- Edit -->
+                <a href="/host/edit-home/<%= home._id %>?editing=true"
+                  class="w-full text-center text-sm font-medium text-rose-500 border border-rose-200 bg-rose-50 rounded-xl py-2.5 hover:bg-rose-100 transition">
+                  Edit
+                </a>
+
+                <!-- Delete -->
+                <form action="/host/delete-home/<%= home._id %>" method="POST">
+                  <button
+                    class="w-full text-sm font-medium text-red-600 border border-red-200 bg-red-50 rounded-xl py-2.5 hover:bg-red-100 transition">
+                    Delete
+                  </button>
+                </form>
+
+              </div>
+
+            </div>
+
+          </div>
+
+        <% }) %>
+
+      </div>
+
+    <% } else { %>
+
+      <!-- Empty -->
+      <div class="text-center py-24">
+        <p class="text-gray-400 mb-4">
+          You haven't listed any homes yet.
+        </p>
+        <a href="/add-home"
+          class="inline-block text-rose-500 font-medium border-b border-rose-500 pb-px hover:text-rose-600 transition">
+          Add your first home
+        </a>
+      </div>
+
+    <% } %>
+
+  </section>
+
+<%- include('../partials/image-slider') %>
+
+</body>
+</html>

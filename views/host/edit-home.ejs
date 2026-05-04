@@ -1,0 +1,218 @@
+<%- include('../partials/head') %>
+
+<body class="bg-gray-50 text-gray-900">
+
+  <%- include('../partials/nav') %>
+
+  <!-- Page Header -->
+  <section class="max-w-7xl mx-auto px-6 pt-16 pb-8 text-center">
+
+    <span class="inline-block text-xs font-medium tracking-widest uppercase text-rose-600 bg-rose-50 px-4 py-1 rounded-full mb-5">
+      Host dashboard
+    </span>
+
+    <h1 class="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
+      <%= editing ? "Edit Home" : "Add New Home" %>
+    </h1>
+
+    <p class="text-gray-500 text-base max-w-xl mx-auto">
+      <%= editing ? "Update your property details below." : "List your property and start hosting guests." %>
+    </p>
+
+  </section>
+
+  <!-- Form Section -->
+  <section class="max-w-3xl mx-auto px-6 pb-16">
+
+    <form
+      action="<%= editing ? '/host/edit-home/' + home._id : '/host/add-home' %>"
+      method="POST"
+      enctype="multipart/form-data"
+      class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden"
+    >
+
+      <!-- Form Body -->
+      <div class="p-8 flex flex-col gap-6">
+
+        <!-- Section Label -->
+        <div class="pb-2 border-b border-gray-100">
+          <h2 class="text-base font-semibold text-gray-700">Property Details</h2>
+          <p class="text-sm text-gray-400 mt-0.5">Basic information about your listing.</p>
+        </div>
+
+        <!-- Property Name -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-gray-700">Property Name</label>
+          <input
+            type="text"
+            name="houseName"
+            value="<%= editing ? home.houseName : '' %>"
+            placeholder="e.g. Cozy Beach House"
+            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 transition"
+            required
+          />
+        </div>
+
+        <!-- Two-column row: Price + Rating -->
+        <div class="grid grid-cols-2 gap-4">
+
+          <div class="flex flex-col gap-1.5">
+            <label class="text-sm font-medium text-gray-700">Price per Night</label>
+            <div class="relative">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 text-sm">$</span>
+              <input
+                type="number"
+                name="price"
+                value="<%= editing ? home.price : '' %>"
+                placeholder="120"
+                class="w-full pl-8 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 transition"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label class="text-sm font-medium text-gray-700">Rating</label>
+            <div class="relative">
+              <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-amber-400 text-sm">★</span>
+              <input
+                type="number"
+                step="0.1"
+                min="0"
+                max="5"
+                name="rating"
+                value="<%= editing ? home.rating : '' %>"
+                placeholder="4.5"
+                class="w-full pl-8 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 transition"
+              />
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Location -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-gray-700">Location</label>
+          <div class="relative">
+            <svg class="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 0118 0z"/>
+              <circle cx="12" cy="10" r="3"/>
+            </svg>
+            <input
+              type="text"
+              name="location"
+              value="<%= editing ? home.location : '' %>"
+              placeholder="e.g. Goa, India"
+              class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 transition"
+              required
+            />
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-gray-700">Description</label>
+          <textarea
+            name="description"
+            placeholder="Describe your property — amenities, vibe, nearby attractions…"
+            rows="4"
+            class="w-full px-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 transition resize-none"
+          ><%= editing ? home.description : '' %></textarea>
+        </div>
+
+        <!-- Divider -->
+        <div class="pb-2 border-b border-gray-100 mt-2">
+          <h2 class="text-base font-semibold text-gray-700">Media & Documents</h2>
+          <p class="text-sm text-gray-400 mt-0.5">Upload photos and house rules for your listing.</p>
+        </div>
+
+        <!-- Existing Images Preview -->
+        <% if (editing && home && home.url && home.url.length > 0) { %>
+          <div class="flex flex-col gap-2">
+            <p class="text-sm font-medium text-gray-700">Current Images</p>
+            <div class="relative rounded-xl overflow-hidden" data-images='<%- JSON.stringify(home.url) %>'>
+              <img
+                class="slider w-full h-64 object-cover"
+                src="<%= home.url[0] %>"
+              />
+              <button
+                type="button"
+                onclick="prevImage(this)"
+                class="absolute left-3 top-1/2 -translate-y-1/2 bg-white/80 px-3 py-1 rounded-full text-sm"
+              >◀</button>
+              <button
+                type="button"
+                onclick="nextImage(this)"
+                class="absolute right-3 top-1/2 -translate-y-1/2 bg-white/80 px-3 py-1 rounded-full text-sm"
+              >▶</button>
+              <span class="absolute top-3 left-3 text-xs font-medium bg-white/90 px-3 py-1 rounded-full">
+                Existing Images
+              </span>
+            </div>
+          </div>
+        <% } %>
+
+        <!-- Upload Images -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-gray-700">
+            <%= editing ? "Replace Images" : "Upload Images" %>
+          </label>
+          <input
+            type="file"
+            name="url"
+            multiple
+            accept="image/jpg, image/jpeg, image/png"
+            class="block w-full text-sm text-gray-600
+                   file:mr-4 file:py-2 file:px-4
+                   file:rounded-lg file:border-0
+                   file:text-sm file:font-medium
+                   file:bg-rose-500 file:text-white
+                   hover:file:bg-rose-600
+                   border border-gray-200 rounded-xl p-2
+                   cursor-pointer"
+          />
+          <p class="text-xs text-gray-400">JPG or PNG. You can select multiple files.</p>
+        </div>
+
+        <!-- Upload House Rules PDF -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-gray-700">House Rules (PDF)</label>
+          <input
+            type="file"
+            name="rules"
+            accept="application/pdf"
+            class="block w-full text-sm text-gray-600
+                   file:mr-4 file:py-2 file:px-4
+                   file:rounded-lg file:border-0
+                   file:text-sm file:font-medium
+                   file:bg-rose-500 file:text-white
+                   hover:file:bg-rose-600
+                   border border-gray-200 rounded-xl p-2
+                   cursor-pointer"
+          />
+          <p class="text-xs text-gray-400">Upload a PDF with your property rules for guests.</p>
+        </div>
+
+      </div>
+
+      <!-- Form Footer -->
+      <div class="px-8 py-5 bg-gray-50 border-t border-gray-100 flex items-center justify-between gap-4">
+        <a href="/host/homes"
+          class="text-sm font-medium text-gray-500 hover:text-gray-700 transition">
+          ← Cancel
+        </a>
+        <button
+          type="submit"
+          class="text-sm font-medium text-white bg-rose-500 px-8 py-3 rounded-xl hover:bg-rose-600 transition">
+          <%= editing ? "Update Home" : "Add Home" %>
+        </button>
+      </div>
+
+    </form>
+
+  </section>
+
+<%- include('../partials/image-slider') %>
+
+</body>
+</html>

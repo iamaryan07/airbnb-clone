@@ -1,0 +1,154 @@
+<style>
+  .nav-root {
+    background: rgba(255,255,255,0.92);
+    backdrop-filter: saturate(180%) blur(16px);
+    -webkit-backdrop-filter: saturate(180%) blur(16px);
+    border-bottom: 1px solid var(--color-border);
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    padding: 0 2.5rem;
+    height: 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: box-shadow 0.2s ease;
+  }
+  .nav-root.scrolled {
+    box-shadow: 0 2px 20px rgba(26,17,23,0.08);
+  }
+
+  /* Wordmark */
+  .nav-wordmark {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--color-rose);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    transition: opacity 0.15s ease;
+  }
+  .nav-wordmark:hover { opacity: 0.82; }
+
+  /* Links group */
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  .nav-link {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--color-slate);
+    padding: 0.5rem 0.75rem;
+    border-radius: var(--radius-pill);
+    transition: color 0.15s ease, background 0.15s ease;
+    white-space: nowrap;
+  }
+  .nav-link:hover {
+    color: var(--color-rose);
+    background: var(--color-rose-soft);
+  }
+
+  /* Divider */
+  .nav-divider {
+    width: 1px;
+    height: 20px;
+    background: var(--color-border);
+    margin: 0 0.5rem;
+    flex-shrink: 0;
+  }
+
+  /* Logout / CTA button */
+  .nav-btn-logout {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: white;
+    background: var(--color-rose);
+    border: none;
+    cursor: pointer;
+    padding: 0.5rem 1.125rem;
+    border-radius: var(--radius-pill);
+    transition: background 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+    letter-spacing: 0.01em;
+  }
+  .nav-btn-logout:hover {
+    background: var(--color-rose-deep);
+    box-shadow: 0 4px 14px rgba(244,63,94,0.35);
+    transform: translateY(-1px);
+  }
+  .nav-btn-logout:active { transform: translateY(0); }
+
+  /* Register pill (outlined) */
+  .nav-btn-register {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-rose);
+    background: transparent;
+    border: 1.5px solid var(--color-rose-muted);
+    padding: 0.45rem 1.125rem;
+    border-radius: var(--radius-pill);
+    transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  }
+  .nav-btn-register:hover {
+    background: var(--color-rose-soft);
+    border-color: var(--color-rose);
+    color: var(--color-rose-deep);
+  }
+</style>
+
+<nav class="nav-root" id="mainNav">
+
+  <a href="/" class="nav-wordmark">Airbnb</a>
+
+  <div class="nav-links">
+
+    <% if (isLoggedIn && user) { %>
+
+      <% if (user.role === 'guest') { %>
+        <a href="/homes"      class="nav-link">Homes</a>
+        <a href="/bookings"   class="nav-link">Bookings</a>
+        <a href="/favourites" class="nav-link">Favourites</a>
+      <% } else if (user.role === 'host') { %>
+        <a href="/host/add-home"   class="nav-link">Add Home</a>
+        <a href="/host/home-list"  class="nav-link">My Listings</a>
+        <a href="/host/bookings"   class="nav-link">Bookings</a>
+      <% } %>
+
+      <!-- Role Badge -->
+      <span class="px-3 py-1 text-xs font-semibold rounded-full 
+        <%= user.role === 'host' 
+          ? 'bg-rose-100 text-rose-600' 
+          : 'bg-gray-100 text-gray-600' %>">
+        <%= user.role.toUpperCase() %>
+      </span>
+
+      <div class="nav-divider"></div>
+
+      <a href="/change-password" class="nav-link">Change Password</a>
+
+      <form action="/logout" method="POST" style="display:inline;">
+        <button type="submit" class="nav-btn-logout">Logout</button>
+      </form>
+
+    <% } else { %>
+
+      <a href="/login" class="nav-link">Login</a>
+      <a href="/register" class="nav-btn-register">Register</a>
+
+    <% } %>
+
+  </div>
+</nav>
+
+<script>
+  /* Subtle shadow on scroll */
+  (function() {
+    const nav = document.getElementById('mainNav');
+    if (!nav) return;
+    window.addEventListener('scroll', function() {
+      nav.classList.toggle('scrolled', window.scrollY > 8);
+    }, { passive: true });
+  })();
+</script>

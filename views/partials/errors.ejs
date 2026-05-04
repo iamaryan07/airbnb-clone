@@ -1,0 +1,112 @@
+<style>
+  .error-banner {
+    background: #fff5f6;
+    border: 1.5px solid #fecdd3;
+    border-left: 4px solid var(--color-rose);
+    border-radius: var(--radius-md);
+    padding: 0.875rem 1rem;
+    animation: errorSlideIn 0.25s cubic-bezier(0.16,1,0.3,1);
+  }
+  @keyframes errorSlideIn {
+    from { opacity: 0; transform: translateY(-6px) scale(0.99); }
+    to   { opacity: 1; transform: translateY(0)   scale(1); }
+  }
+
+  .error-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.5rem;
+  }
+
+  .error-label {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--color-rose-deep);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .error-icon {
+    width: 15px;
+    height: 15px;
+    flex-shrink: 0;
+    color: var(--color-rose);
+  }
+
+  .error-close {
+    background: none;
+    border: none;
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #f87171;
+    transition: background 0.15s ease, color 0.15s ease;
+    font-size: 1rem;
+    line-height: 1;
+    padding: 0;
+  }
+  .error-close:hover {
+    background: #ffe4e6;
+    color: var(--color-rose-deep);
+  }
+
+  .error-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .error-item {
+    font-size: 0.875rem;
+    color: #be123c;
+    font-weight: 400;
+    padding-left: 1rem;
+    position: relative;
+  }
+  .error-item::before {
+    content: '·';
+    position: absolute;
+    left: 0.25rem;
+    font-size: 1.1em;
+    line-height: 1.4;
+    color: var(--color-rose-muted);
+  }
+</style>
+
+<% if (errors && errors.length > 0) { %>
+<div class="error-banner" role="alert" aria-live="assertive">
+  <div class="error-header">
+    <span class="error-label">
+      <!-- Warning icon (inline SVG, no CDN) -->
+      <svg class="error-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <circle cx="10" cy="10" r="8"/>
+        <line x1="10" y1="6.5" x2="10" y2="10.5"/>
+        <circle cx="10" cy="13.5" r="0.5" fill="currentColor" stroke="none"/>
+      </svg>
+      Something went wrong
+    </span>
+    <button
+      type="button"
+      class="error-close"
+      onclick="this.closest('.error-banner').remove()"
+      aria-label="Dismiss error"
+    >&#x2715;</button>
+  </div>
+  <ul class="error-list">
+    <% errors.forEach(err => { %>
+      <li class="error-item"><%= err %></li>
+    <% }) %>
+  </ul>
+</div>
+<% } %>

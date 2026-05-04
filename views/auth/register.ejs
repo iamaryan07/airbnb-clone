@@ -1,0 +1,211 @@
+<%- include('../partials/head') %>
+
+<body class="bg-gray-50 text-gray-900">
+
+  <%- include('../partials/nav') %>
+
+  <!-- Page Header -->
+  <section class="max-w-7xl mx-auto px-6 pt-16 pb-8 text-center">
+
+    <span class="inline-block text-xs font-medium tracking-widest uppercase text-rose-600 bg-rose-50 px-4 py-1 rounded-full mb-5">
+      Get started
+    </span>
+
+    <h1 class="text-4xl md:text-5xl font-semibold tracking-tight mb-4">
+      Create your account
+    </h1>
+
+    <p class="text-gray-500 text-base max-w-xl mx-auto">
+      Join thousands of guests and hosts on our platform.
+    </p>
+
+  </section>
+
+  <!-- Form Section -->
+  <section class="max-w-md mx-auto px-6 pb-16">
+
+    <form
+      action="/register"
+      method="POST"
+      class="bg-white border border-gray-100 rounded-2xl shadow-sm overflow-hidden"
+    >
+
+      <div class="p-8 flex flex-col gap-5">
+
+        <!-- Errors -->
+        <%- include('../partials/errors') %>
+
+        <!-- First Name + Last Name -->
+        <div class="grid grid-cols-2 gap-4">
+
+          <div class="flex flex-col gap-1.5">
+            <label class="text-sm font-medium text-gray-700">First Name</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-3.5 flex items-center text-gray-400">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>
+              </span>
+              <input
+                type="text"
+                name="firstName"
+                value="<%= oldInput?.firstName || '' %>"
+                placeholder="Mohan"
+                class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 transition"
+              />
+            </div>
+          </div>
+
+          <div class="flex flex-col gap-1.5">
+            <label class="text-sm font-medium text-gray-700">Last Name</label>
+            <div class="relative">
+              <span class="absolute inset-y-0 left-3.5 flex items-center text-gray-400">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
+                </svg>
+              </span>
+              <input
+                type="text"
+                name="lastName"
+                value="<%= oldInput?.lastName || '' %>"
+                placeholder="Singh"
+                class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 transition"
+              />
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Email -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-gray-700">Email Address</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-3.5 flex items-center text-gray-400">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+              </svg>
+            </span>
+            <input
+              type="email"
+              name="email"
+              value="<%= oldInput?.email || '' %>"
+              placeholder="you@example.com"
+              class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 transition"
+            />
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-gray-700">Password</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-3.5 flex items-center text-gray-400">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+              </svg>
+            </span>
+            <input
+              type="password"
+              name="password"
+              placeholder="Create a password"
+              class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 transition"
+            />
+          </div>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="flex flex-col gap-1.5">
+          <label class="text-sm font-medium text-gray-700">Confirm Password</label>
+          <div class="relative">
+            <span class="absolute inset-y-0 left-3.5 flex items-center text-gray-400">
+              <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 1 0-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 0 0 2.25-2.25v-6.75a2.25 2.25 0 0 0-2.25-2.25H6.75a2.25 2.25 0 0 0-2.25 2.25v6.75a2.25 2.25 0 0 0 2.25 2.25Z" />
+              </svg>
+            </span>
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Confirm your password"
+              class="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-rose-400 transition"
+            />
+          </div>
+        </div>
+
+        <!-- Role Selection -->
+        <div class="flex flex-col gap-2">
+          <p class="text-sm font-medium text-gray-700">I want to register as</p>
+          <div class="grid grid-cols-2 gap-3">
+
+            <label class="flex items-center gap-3 border border-gray-200 rounded-xl px-4 py-3 cursor-pointer hover:border-rose-300 hover:bg-rose-50 transition has-[:checked]:border-rose-400 has-[:checked]:bg-rose-50">
+              <input
+                type="radio"
+                name="role"
+                value="guest"
+                class="accent-rose-500 w-4 h-4"
+                <%= !oldInput?.role || oldInput.role === 'guest' ? 'checked' : '' %>
+              />
+              <div>
+                <p class="text-sm font-medium text-gray-700">Guest</p>
+                <p class="text-xs text-gray-400">Browse & book</p>
+              </div>
+            </label>
+
+            <label class="flex items-center gap-3 border border-gray-200 rounded-xl px-4 py-3 cursor-pointer hover:border-rose-300 hover:bg-rose-50 transition has-[:checked]:border-rose-400 has-[:checked]:bg-rose-50">
+              <input
+                type="radio"
+                name="role"
+                value="host"
+                class="accent-rose-500 w-4 h-4"
+                <%= oldInput?.role === 'host' ? 'checked' : '' %>
+              />
+              <div>
+                <p class="text-sm font-medium text-gray-700">Host</p>
+                <p class="text-xs text-gray-400">List your home</p>
+              </div>
+            </label>
+
+          </div>
+        </div>
+
+        <!-- Terms -->
+        <label class="flex items-start gap-2.5 cursor-pointer">
+          <input
+            type="checkbox"
+            name="terms"
+            id="terms"
+            class="mt-0.5 h-4 w-4 accent-rose-500 rounded border-gray-300 shrink-0"
+          />
+          <span class="text-sm text-gray-500 leading-relaxed">
+            I agree to the
+            <a href="#" class="text-rose-500 hover:underline">terms and conditions</a>
+          </span>
+        </label>
+
+      </div>
+
+      <!-- Form Footer -->
+      <div class="px-8 py-5 bg-gray-50 border-t border-gray-100 flex flex-col gap-4">
+
+        <button
+          type="submit"
+          class="w-full flex items-center justify-center gap-2 text-sm font-medium text-white bg-rose-500 rounded-xl py-3 hover:bg-rose-600 transition"
+        >
+          Create Account
+          <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
+          </svg>
+        </button>
+
+        <p class="text-sm text-center text-gray-500">
+          Already have an account?
+          <a href="/login" class="text-rose-500 hover:underline">Log in</a>
+        </p>
+
+      </div>
+
+    </form>
+
+  </section>
+
+</body>
+</html>
