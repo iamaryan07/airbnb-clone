@@ -43,7 +43,11 @@
             <!-- Image -->
             <div class="md:w-72 shrink-0 relative">
               <img
-                src="<%= booking.home?.url?.length ? '/uploads/' + booking.home.url[0] : 'https://via.placeholder.com/400' %>"
+                src="<%= booking.home?.url?.[0] 
+                  ? (booking.home.url[0].startsWith('http') 
+                      ? booking.home.url[0] 
+                      : '/uploads/' + booking.home.url[0]) 
+                  : 'https://via.placeholder.com/400' %>"
                 class="w-full h-56 md:h-full object-cover"
               />
               <span class="absolute top-3 left-3 text-xs font-medium bg-white/90 px-3 py-1 rounded-full">
