@@ -140,6 +140,8 @@ exports.postRegister = [
           </a>
         `,
         });
+        req.session.message =
+          "If this email exists, a reset link has been sent.";
         console.log("MAIL SENT:", info.response);
         res.redirect("/login");
       } catch (error) {
