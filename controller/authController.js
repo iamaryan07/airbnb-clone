@@ -139,6 +139,7 @@ exports.postRegister = [
         await user.save();
 
         const info = await transporter.sendMail({
+          from: "aryanbalhara150@gmail.com",
           to: email,
           subject: "Verify your account",
           html: `
