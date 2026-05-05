@@ -112,9 +112,64 @@ exports.postRegister = [
       return true;
     }),
 
+  // (req, res, next) => {
+  //   const { firstName, lastName, email, password, role } = req.body;
+  //   const errors = validationResult(req);
+  //   if (!errors.isEmpty()) {
+  //     return res.status(422).render("auth/register", {
+  //       pageTitle: "Register",
+  //       errors: errors.array().map((e) => e.msg),
+  //       oldInput: { firstName, lastName, email, password, role },
+  //     });
+  //   }
+
+  //   bcrypt.hash(password, 12).then(async (hashedPassword) => {
+  //     try {
+  //       const token = crypto.randomBytes(32).toString("hex");
+  //       const user = new User({
+  //         firstName,
+  //         lastName,
+  //         email,
+  //         password: hashedPassword,
+  //         role,
+  //         isActive: false,
+  //         verificationToken: token,
+  //         verificationTokenExpiry: Date.now() + 600000,
+  //       });
+  //       await user.save();
+
+  //       const info = await transporter.sendMail({
+  //         from: "aryanbalhara150@gmail.com",
+  //         to: email,
+  //         subject: "Verify your account",
+  //         html: `
+  //         <h2>Email Verification for airbnb</h2>
+  //         <p>Click below to activate your account:</p>
+  //         <a href="${process.env.BASE_URL}/verify/${token}">
+  //           Verify Account
+  //         </a>
+  //       `,
+  //       });
+  //       req.session.message =
+  //         "If this email exists, a reset link has been sent.";
+  //       console.log("MAIL SENT:", info.response);
+  //       res.redirect("/login");
+  //     } catch (error) {
+  //       console.log("REGISTER ERROR:", error);
+
+  //       return res.status(500).render("auth/register", {
+  //         pageTitle: "Register",
+  //         errors: ["Something went wrong. Try again."],
+  //         oldInput: { firstName, lastName, email, password, role },
+  //       });
+  //     }
+  //   });
+  // },
+
   (req, res, next) => {
     const { firstName, lastName, email, password, role } = req.body;
     const errors = validationResult(req);
+
     if (!errors.isEmpty()) {
       return res.status(422).render("auth/register", {
         pageTitle: "Register",
@@ -123,9 +178,12 @@ exports.postRegister = [
       });
     }
 
-    bcrypt.hash(password, 12).then(async (hashedPassword) => {
+    (async () => {
       try {
+        const hashedPassword = await bcrypt.hash(password, 12);
+
         const token = crypto.randomBytes(32).toString("hex");
+
         const user = new User({
           firstName,
           lastName,
@@ -136,6 +194,7 @@ exports.postRegister = [
           verificationToken: token,
           verificationTokenExpiry: Date.now() + 600000,
         });
+
         await user.save();
 
         const info = await transporter.sendMail({
@@ -143,17 +202,19 @@ exports.postRegister = [
           to: email,
           subject: "Verify your account",
           html: `
-          <h2>Email Verification for airbnb</h2>
-          <p>Click below to activate your account:</p>
+          <h2>Email Verification</h2>
           <a href="${process.env.BASE_URL}/verify/${token}">
             Verify Account
           </a>
         `,
         });
+
+        console.log("MAIL SENT:", info.response);
+
         req.session.message =
           "If this email exists, a reset link has been sent.";
-        console.log("MAIL SENT:", info.response);
-        res.redirect("/login");
+
+        return res.redirect("/login");
       } catch (error) {
         console.log("REGISTER ERROR:", error);
 
@@ -163,7 +224,7 @@ exports.postRegister = [
           oldInput: { firstName, lastName, email, password, role },
         });
       }
-    });
+    })();
   },
 ];
 
@@ -291,6 +352,7 @@ exports.postForgotPassword = [
       await user.save();
 
       await transporter.sendMail({
+        from: "aryanbalhara150@gmail.com",
         to: email,
         subject: "Reset your password",
         html: `
