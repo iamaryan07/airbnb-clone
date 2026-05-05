@@ -1,25 +1,19 @@
 const { check, validationResult } = require("express-validator");
+const sgMail = require("@sendgrid/mail");
 const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const nodemailer = require("nodemailer");
+// const nodemailer = require("nodemailer");
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // const transporter = nodemailer.createTransport({
-//   service: "gmail",
+//   host: "smtp.sendgrid.net",
+//   port: 587,
 //   auth: {
-//     user: process.env.EMAIL_USER,
-//     pass: process.env.EMAIL_PASS,
+//     user: "apikey", // IMPORTANT: literally "apikey"
+//     pass: process.env.SENDGRID_API_KEY,
 //   },
 // });
-
-const transporter = nodemailer.createTransport({
-  host: "smtp.sendgrid.net",
-  port: 587,
-  auth: {
-    user: "apikey", // IMPORTANT: literally "apikey"
-    pass: process.env.SENDGRID_API_KEY,
-  },
-});
 
 exports.getLogin = (req, res, next) => {
   let message = [];
@@ -197,19 +191,17 @@ exports.postRegister = [
 
         await user.save();
 
-        const info = await transporter.sendMail({
-          from: "aryanbalhara150@gmail.com",
+        await sgMail.send({
           to: email,
+          from: "aryanbalhara150@gmail.com",
           subject: "Verify your account",
           html: `
-          <h2>Email Verification</h2>
-          <a href="${process.env.BASE_URL}/verify/${token}">
-            Verify Account
-          </a>
-        `,
+            <h2>Email Verification</h2>
+            <a href="${process.env.BASE_URL}/verify/${token}">
+              Verify Account
+            </a>
+          `,
         });
-
-        console.log("MAIL SENT:", info.response);
 
         req.session.message =
           "If this email exists, a reset link has been sent.";
@@ -351,17 +343,16 @@ exports.postForgotPassword = [
       user.resetTokenExpiry = Date.now() + 600000;
       await user.save();
 
-      await transporter.sendMail({
-        from: "aryanbalhara150@gmail.com",
+      await sgMail.send({
         to: email,
-        subject: "Reset your password",
+        from: "aryanbalhara150@gmail.com",
+        subject: "Verify your account",
         html: `
-        <h2>Password Reset</h2>
-        <p>Click below to reset your password:</p>
-        <a href="${process.env.BASE_URL}/reset/${token}">
-          Reset Password
-        </a>
-      `,
+          <h2>Email Verification</h2>
+          <a href="${process.env.BASE_URL}/verify/${token}">
+            Verify Account
+          </a>
+        `,
       });
 
       req.session.message = "If this email exists, a reset link has been sent.";
