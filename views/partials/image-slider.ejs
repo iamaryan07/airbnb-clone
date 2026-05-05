@@ -97,7 +97,7 @@
   }
 </style>
 
-<script>
+<!-- <script>
   function getContainer(btn) {
     return btn.closest("[data-images]");
   }
@@ -154,6 +154,110 @@
       images.forEach(function(_, i) {
         const dot = document.createElement('span');
         dot.className = 'slider-dot' + (i === 0 ? ' active' : '');
+        dotsEl.appendChild(dot);
+      });
+    });
+  });
+</script> -->
+
+
+<script>
+  function getContainer(btn) {
+    return btn.closest("[data-images]");
+  }
+
+  function getImages(container) {
+    try {
+      const data = container.dataset.images;
+      const parsed = JSON.parse(data);
+
+      // ensure array
+      return Array.isArray(parsed) ? parsed : [parsed];
+    } catch (e) {
+      console.error("Invalid image data:", e);
+      return [];
+    }
+  }
+
+  function getImgTag(container) {
+    return container.querySelector(".slider");
+  }
+
+  function resolveImagePath(src) {
+    // If already full URL (Cloudinary or external), use as-is
+    if (typeof src === "string" && src.startsWith("http")) {
+      return src;
+    }
+
+    // fallback for local uploads
+    return "/uploads/" + src;
+  }
+
+  function syncDots(container, index) {
+    const dots = container.querySelectorAll(".slider-dot");
+    dots.forEach(function (d, i) {
+      d.classList.toggle("active", i === index);
+    });
+  }
+
+  function nextImage(btn) {
+    const container = getContainer(btn);
+    const images = getImages(container);
+    const img = getImgTag(container);
+
+    if (!images.length) return;
+
+    let index = Number(container.dataset.index || 0);
+    index = (index + 1) % images.length;
+
+    container.dataset.index = index;
+    img.src = resolveImagePath(images[index]);
+
+    syncDots(container, index);
+  }
+
+  function prevImage(btn) {
+    const container = getContainer(btn);
+    const images = getImages(container);
+    const img = getImgTag(container);
+
+    if (!images.length) return;
+
+    let index = Number(container.dataset.index || 0);
+    index = (index - 1 + images.length) % images.length;
+
+    container.dataset.index = index;
+    img.src = resolveImagePath(images[index]);
+
+    syncDots(container, index);
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("[data-images]").forEach(function (container) {
+      const images = getImages(container);
+      const dotsEl = container.querySelector(".slider-dots");
+
+      if (!dotsEl || images.length <= 1) return;
+
+      // set initial index
+      container.dataset.index = 0;
+
+      // ensure first image is correct (important fix)
+      const img = getImgTag(container);
+      if (img && images[0]) {
+        img.src = resolveImagePath(images[0]);
+      }
+
+      images.forEach(function (_, i) {
+        const dot = document.createElement("span");
+        dot.className = "slider-dot" + (i === 0 ? " active" : "");
+
+        dot.addEventListener("click", function () {
+          container.dataset.index = i;
+          img.src = resolveImagePath(images[i]);
+          syncDots(container, i);
+        });
+
         dotsEl.appendChild(dot);
       });
     });
