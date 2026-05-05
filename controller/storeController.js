@@ -20,7 +20,7 @@ exports.getIndex = async (req, res, next) => {
     res.render("store/index", {
       registeredHomes,
       pageTitle: "airbnb Home",
-      role: req.session.user.role,
+      role: req.session.user?.role,
     });
   } catch (err) {
     console.log("Error fetching index homes:", err);

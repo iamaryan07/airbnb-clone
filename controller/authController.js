@@ -3,7 +3,6 @@ const User = require("../models/user");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
 const nodemailer = require("nodemailer");
-// require("dotenv").config();
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -130,7 +129,7 @@ exports.postRegister = [
         });
         await user.save();
 
-        await transporter.sendMail({
+        const info = await transporter.sendMail({
           to: email,
           subject: "Verify your account",
           html: `
@@ -141,6 +140,7 @@ exports.postRegister = [
           </a>
         `,
         });
+        console.log("MAIL SENT:", info.response);
         res.redirect("/login");
       } catch (error) {
         console.log("REGISTER ERROR:", error);
